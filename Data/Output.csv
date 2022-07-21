@@ -1,0 +1,26 @@
+Please open the Simulink file under the current working directory
+The program is waiting until you run the Simulink file.
+Number from MATLAB ('127.0.0.1', 53880) is : 0.0
+Number from MATLAB ('127.0.0.1', 53880) is : -0.42201378674171935
+Number from MATLAB ('127.0.0.1', 53880) is : -0.8283239215299611
+Number from MATLAB ('127.0.0.1', 53880) is : -1.2178613953472581
+Number from MATLAB ('127.0.0.1', 53880) is : -1.5916981476308336
+Number from MATLAB ('127.0.0.1', 53880) is : -1.9513584986555994
+Number from MATLAB ('127.0.0.1', 53880) is : -2.2986314731367514
+Number from MATLAB ('127.0.0.1', 53880) is : -2.6355207577121513
+Number from MATLAB ('127.0.0.1', 53880) is : -2.9642187000343334
+Number from MATLAB ('127.0.0.1', 53880) is : -3.2871029752529535
+Number from MATLAB ('127.0.0.1', 53880) is : -3.606751792792827
+Number from MATLAB ('127.0.0.1', 53880) is : -3.9259924545111455
+Number from MATLAB ('127.0.0.1', 53880) is : -4.247985487006601
+Number from MATLAB ('127.0.0.1', 53880) is : -4.57635450833223
+Number from MATLAB ('127.0.0.1', 53880) is : -4.915381751479225
+Number from MATLAB ('127.0.0.1', 53880) is : -5.270300140705808
+Number from MATLAB ('127.0.0.1', 53880) is : -5.647739451876183
+Number from MATLAB ('127.0.0.1', 53880) is : -6.056423792471454
+Number from MATLAB ('127.0.0.1', 53880) is : -6.508321872539421
+Number from MATLAB ('127.0.0.1', 53880) is : -7.020597467303928
+Number from MATLAB ('127.0.0.1', 53880) is : -7.6191803402574
+Number from MATLAB ('127.0.0.1', 53880) is : -8.345802744114746
+Number from MATLAB ('127.0.0.1', 53880) is : -9.273137089780157
+Number from MATLAB ('127.0.0.1', 53880) is : -10.5415895469521
