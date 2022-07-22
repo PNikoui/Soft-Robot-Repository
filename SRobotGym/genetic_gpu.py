@@ -265,7 +265,7 @@ class genetic_algo(object):
 
     def run_agents_n_times(self, agents, runs):
 
-        env = RobotEnv(self.num_turns)
+        env = SRobotEnv(self.num_turns)
         seeds = []
         random.seed()
         for i in range(runs):
