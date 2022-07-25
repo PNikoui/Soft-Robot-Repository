@@ -30,10 +30,7 @@ class genetic_algo(object):
             m.bias.data.fill_(0.00)
 
     def update_weights(self, m, checkpoint):
-        
-        
         if ((type(m) == nn.Linear) | (type(m) == nn.Conv2d)):
-            
             m.to(device)
             # m.get_device()
             m.load_state_dict(checkpoint['state_dict'])
@@ -46,7 +43,7 @@ class genetic_algo(object):
         agents = []
         for _ in range(num_agents):
 
-            agent = Net().cuda()
+            agent = Net()
 
             for param in agent.parameters():
                 param.requires_grad = False
@@ -61,7 +58,9 @@ class genetic_algo(object):
         agents = []
         for _ in range(num_agents):
 
-            agent = Net().cuda()
+            agent = Net()
+
+            # agent = seekndestroy().cuda()
                    
             for param in agent.parameters():
                 param.requires_grad = False
@@ -76,8 +75,6 @@ class genetic_algo(object):
         agent.eval()
         rs = []
         Goal_Counter = 0
-        Total_Steps = 0
-        Action_Counter = np.zeros(runs)
 
         # print("NEXT AGENT")
 
@@ -86,15 +83,13 @@ class genetic_algo(object):
             # print("Run number:", run)
 
             observation = env.reset(seeds[run])
-            
-            Action_Counter[run] = Total_Steps
-            
             r = 0
-            Total_Steps = 0
+            s = 0
             
 
             for _ in range(self.max_step):
-                inp = torch.tensor(observation[:,0:3]).type('torch.FloatTensor').cuda()
+                inp = torch.tensor(observation[:,0:3]).type('torch.FloatTensor')
+                # inp = torch.tensor(observation).type('torch.FloatTensor').cuda()
                                 
                 # print(torch.cuda.device_count())
                 if torch.cuda.device_count() > 1:
@@ -104,15 +99,12 @@ class genetic_algo(object):
                 
                 mu = agent(inp)
                 mu = mu.cpu().detach().numpy()
-                action = mu.reshape(1,3)
+                action = mu.reshape(1,2)
                 
 
                 action[0][1] = action[0][1] * np.pi / 4
 
                 new_observation, reward, done, info = env.step(action)
-                
-                
-               
 
                 if(done):
                     break
@@ -120,136 +112,33 @@ class genetic_algo(object):
                 
                 
                 r = r + reward
-                Total_Steps += 1 
-                
+                s = s + 1
                 
                 old_parameters = np.array(np.reshape(observation, (1, 35)))
-                
-#                 print(old_parameters)
-#                 old_Lidar = sum(old_parameters[:,1:30])
-                old_left_Lidar = old_parameters[:,6]
-                old_right_Lidar = old_parameters[:,24]
-                # print(sum(old_Lidar))
                 old_DIST = old_parameters[:,-5]
                 # print(old_DIST)
                 old_ANGLE = old_parameters[:,-4]
                 
-                
-                #############################
                 observation = new_observation
-                #############################
+                
                 
                 parameters = np.array(np.reshape(observation, (1, 35)))
-                
-                
-#                 new_Lidar = sum(parameters[:,1:30])
-                new_left_Lidar = parameters[:,6]
-#                 print("left", new_left_Lidar)
-                new_right_Lidar = parameters[:,24]
-#                 print("right", new_right_Lidar)
-                Lidar_Diff = np.abs(new_left_Lidar - new_right_Lidar)
-#                 print(new_Lidar)
-
-                new_left_Lidar_Range = sum(sum(parameters[:,4:8]))/4
-#                 print("left", new_left_Lidar)
-                new_right_Lidar_Range = sum(sum(parameters[:,22:26]))/4
-#                 print("right", new_right_Lidar)
-                Lidar_Range_Diff = np.abs(new_left_Lidar_Range - new_right_Lidar_Range)
-#                 print(new_Lidar)
-
-                # print(sum(new_Lidar))
                 new_DIST = parameters[:,-5]
                 # print(new_DIST)
                 new_ANGLE = parameters[:,-4]
-                
-                
-        
-            ## ACTION BASED PENALTIES (inner for loop):
-                
-                             
-            ## Adding a penalty for the physical restraints of the system, the car cannot turn more than a certain amount. The exact angle yet to be determined 
-
-                if new_ANGLE > np.pi/2:   
-                    r += 100
-#                     print("Recieved extra angle penalty")
-
-                
-            ## 15 is an estimate for when half of the lidar measurements (30 total) are 0.5 meaning starting to head towards a wall. You want to minimize this value
-            ## because the lidar scan returns the distance of a dectection of an obstacle, then its subtracted from the length of the track (1-scan) which is essentially
-            ## then the amount the car deviated from the track. Penalized if facing a wall too much:
-
-#                 if sum(new_Lidar) > 20:   
-#                     r += np.abs(sum(new_Lidar))*10
-#                 # print("Recieved extra Lidar penalty")
-
-#                 print(old_left_Lidar-old_right_Lidar)
-#                 print(Lidar_Diff)
-
-#                 if Lidar_Diff > 0.3:
-#                     r += Lidar_Diff*100
-
-
-                if Lidar_Range_Diff > 0.6:
-                    r += Lidar_Diff*100
-            
-            
-            
-            
-#             ## Here the car is penalized if facing a wall too much and heading towards it:  
-            
-#                 if ((sum(new_Lidar) > 20) and (sum(old_Lidar) < sum(new_Lidar))):
-#                     r += np.abs(sum(new_Lidar))*30
-#                     # print("Recieved additional Lidar and direction penalty")
-
-
-                if closer(old_DIST,new_DIST) == 0:
-                    r += np.abs((old_DIST-new_DIST))*10 * 3
-                    # print("Recieved extra distance penalty")  
-                    
-                    
-            ## (outer for loop)       
-            ## Here a penalty is added if the car takes fewer steps than the previous car (hits a wall fast):
-                    
-    #             if run == 1:
-
-    #                 if Action_Counter[0] > Action_Counter[1]:
-    #                      r += np.abs(Action_Counter[0] - Action_Counter[1])*2
-
-
-#                 if run == runs-1:
-
-    #                 if Action_Counter[1] > Action_Counter[2]:
-    #                     r += np.abs(Action_Counter[1] - Action_Counter[2])*2
-
-
-                    ## Bad Momentum (Number of successful steps decrease for all runs)
-
-#                     if (Action_Counter[0] > Action_Counter[1]) and (Action_Counter[1] > Action_Counter[2]):
-#                         r += (np.abs(Action_Counter[0] - Action_Counter[1]) + np.abs(Action_Counter[1] - Action_Counter[2]))*10 
-
-    #             if run == 3:
-
-    #                 if Action_Counter[2] > Action_Counter[3]:
-    #                     r += np.abs(Action_Counter[2] - Action_Counter[3])*2
-
-
-    #                 ## Bad Momentum (Number of successful steps decrease for all runs)
-
-    #                 if ((Action_Counter[0] > Action_Counter[1]) and (Action_Counter[1] > Action_Counter[2]) and (Action_Counter[2] > Action_Counter[3])):
-    #                     r += (np.abs(Action_Counter[0] - Action_Counter[1]) + np.abs(Action_Counter[1] - Action_Counter[2]) + np.abs(Action_Counter[2] - Action_Counter[3]))*10 
-
-           
-                    
-            
-            ## GOAL STATUS BASED PENALTIES:
-            
-            ## Goal count:
 
             if reward == 0:
-                  Goal_Counter += 1        
+                  Goal_Counter += 1                
 
-            ## Penalties for Goal status: 
+            # if new_ANGLE > np.pi/2:   
+            #     r += 100
+            #     print("Recieved extra angle penalty")
             
+            # if closer(old_DIST,new_DIST) == 0:
+            #     r += np.abs((old_DIST-new_DIST))*10 * 3
+            #     # print("Recieved extra distance penalty")    
+
+
             if reward == -99:
                 r += np.sqrt((env.goal[0] - env.sim.car[0])**2 + (env.goal[1] - env.sim.car[1])**2) * 10 * 3
 
@@ -441,7 +330,6 @@ class genetic_algo(object):
             print("Generation ", generation, " | Mean rewards: ", np.mean(rewards), " | Mean of top 5: ", np.mean(top_rewards[:5]))
             print("Top ", top_limit, " scores", sorted_parent_indexes)
             print("Rewards for top: ", top_rewards)
-            print("Number of Goals Hit:", GOALS_HIT[generation])
 
             # setup an empty list for containing children agents
             children_agents, elite_index, top_score = self.return_children(agents, sorted_parent_indexes, elite_index, Num_Crossover, Mutation_Power)
@@ -466,9 +354,10 @@ class genetic_algo(object):
               # checkpoint = torch.load(PATH)
 
             if generation == generations-1:
+                
                 PATH = 'models/' + 'turn'+ '_{}'.format(self.num_turns)
                 torch.save(agents[elite_index].state_dict(), PATH)
-                 # Save the final fitness plot
+                # Save the final fitness plot
                 f = plt.figure(1)  
                 plt.plot(np.arange(len(Fitness)), Fitness, '-o', markersize=9, label =('The Top Rewards'))
                 plt.xlabel('Epochs')
@@ -508,6 +397,7 @@ class genetic_algo(object):
             rewards = self.run_agents_n_times(agents, 3) # return average of 3 runs
             # print(rewards)
             if sum(np.shape(rewards))!= len(rewards):
+                
                 rewards = np.array(rewards).ravel()
 
             sorted_parent_indexes = np.argsort(rewards)[::-1][:top_limit] # reverses and gives top values (argsort sorts by ascending by default) https://stackoverflow.com/questions/16486252/is-it-possible-to-use-argsort-in-descending-order
@@ -525,7 +415,6 @@ class genetic_algo(object):
             print("Generation ", generation, " | Mean rewards: ", np.mean(rewards), " | Mean of top 5: ", np.mean(top_rewards[:5]))
             print("Top ", top_limit, " scores", sorted_parent_indexes)
             print("Rewards for top: ", top_rewards)
-            print("Number of Goals Hit:", GOALS_HIT[generation])
 
             # setup an empty list for containing children agents
             children_agents, elite_index, top_score = self.return_children(agents, sorted_parent_indexes, elite_index, Num_Crossover, Mutation_Power)
