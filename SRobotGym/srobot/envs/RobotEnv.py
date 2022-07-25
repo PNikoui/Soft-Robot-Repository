@@ -88,10 +88,10 @@ class SRobotEnv(gym.Env):
         old_dist, old_phi, old_sign = self.observe()
         self.oldx, self.oldy = self.armx, self.army
 
-        self.sim.action(action)
+        sensor = self.sim.action(action)
 
         # Fetching the resulting lidar as well as postion data
-        sensor = self.sim.lidar()
+#         sensor = self.sim.lidar()
         self.armx, self.army, self.armz, self.theta = self.sim.arm
 
         # Calculating current distances and angles
@@ -137,7 +137,8 @@ class SRobotEnv(gym.Env):
         self.current_step = 0
 
         # Recieving sensor information
-        sensor = self.sim.lidar()
+#         sensor = self.sim.lidar()
+        sensor = [0,0,0]
         self.armx, self.army, self.armz, self.theta = self.sim.arm
 
         # Calculating distances and angles for the observation vector

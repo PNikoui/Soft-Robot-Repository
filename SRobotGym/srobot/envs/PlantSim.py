@@ -97,4 +97,4 @@ class python_env(object):
 
             scan.append(point_dist)
 
-        return scan
+        return scan[]
