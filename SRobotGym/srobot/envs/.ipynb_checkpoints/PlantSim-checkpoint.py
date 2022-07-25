@@ -57,7 +57,7 @@ class python_env(object):
         
         z = 2/(pressure[0][2]**2 + 5*pressure[0][2] + 5)
         
-        theta = math.arctan(x/y)
+        theta = math.atan(x/y)
 
         return x, y, z, theta
 
