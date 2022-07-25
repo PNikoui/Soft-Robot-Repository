@@ -88,7 +88,7 @@ class SRobotEnv(gym.Env):
         old_dist, old_phi, old_sign = self.observe()
         self.oldx, self.oldy = self.armx, self.army
 
-        sensor = self.sim.action(action)
+        self.sim.action(action)
 
         # Fetching the resulting lidar as well as postion data
 #         sensor = self.sim.lidar()
@@ -97,8 +97,15 @@ class SRobotEnv(gym.Env):
         # Calculating current distances and angles
         dist, phi, sign = self.observe()
 
-        # Defining the observation vector
-        self.obs = list(1 - np.array(sensor) / self.maxgoaldist)
+#         # Defining the observation vector
+#         self.obs = list(1 - np.array(sensor) / self.maxgoaldist)
+#         act = action[0]
+#         self.obs.extend([dist / self.maxgoaldist, phi / pi, sign])
+#         self.obs.extend(act)
+
+      #### CUSTOM observation vector ####
+        sensor = self.sim.TrackStar()
+        self.obs = list(np.array(sensor) / self.maxgoaldist)
         act = action[0]
         self.obs.extend([dist / self.maxgoaldist, phi / pi, sign])
         self.obs.extend(act)
@@ -140,16 +147,23 @@ class SRobotEnv(gym.Env):
         sensor1 = self.sim.lidar()
         print(sensor1,type(sensor1))
         
-        sensor = [0,0,0]
-        print(type(sensor))
+#         sensor = [0,0,0]
+#         print(type(sensor))
         self.armx, self.army, self.armz, self.theta = self.sim.arm
 
         # Calculating distances and angles for the observation vector
         dist, phi, sign = self.observe()
 
-        # Defining the observation vector
-        self.obs = list(1 - np.array(sensor) / self.maxgoaldist)
-        act = [0, 0]
+#         # Defining the observation vector
+#         self.obs = list(1 - np.array(sensor) / self.maxgoaldist)
+#         act = [0, 0]
+#         self.obs.extend([dist / self.maxgoaldist, phi / pi, sign])
+#         self.obs.extend(act)
+
+         #### CUSTOM observation vector ####
+        sensor = self.sim.TrackStar()
+        self.obs = list(np.array(sensor) / self.maxgoaldist)
+        act = action[0]
         self.obs.extend([dist / self.maxgoaldist, phi / pi, sign])
         self.obs.extend(act)
 
