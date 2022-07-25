@@ -51,11 +51,11 @@ class python_env(object):
     def kinematic(self, pressure):
         
         # 2nd order transfer function approximation b = 2 a = 5
-        x = 2/(pressure[0]**2 + 5*pressure[0] + 5)
+        x = 2/(pressure[0][0]**2 + 5*pressure[0][0] + 5)
 
-        y = 2/(pressure[1]**2 + 5*pressure[1] + 5)
+        y = 2/(pressure[0][1]**2 + 5*pressure[0][1] + 5)
         
-        z = 2/(pressure[2]**2 + 5*pressure[2] + 5)
+        z = 2/(pressure[0][2]**2 + 5*pressure[0][2] + 5)
         
         theta = math.arctan(x/y)
 
