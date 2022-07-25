@@ -139,6 +139,7 @@ class SRobotEnv(gym.Env):
         # Recieving sensor information
 #         sensor = self.sim.lidar()
         sensor = [0,0,0]
+        print(type(sensor))
         self.armx, self.army, self.armz, self.theta = self.sim.arm
 
         # Calculating distances and angles for the observation vector
