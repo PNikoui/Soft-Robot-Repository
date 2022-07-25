@@ -107,7 +107,7 @@ class genetic_algo(object):
                 action = mu.reshape(1,3)
                 
 
-                action[0][1] = action[0][1] * np.pi / 4
+#                 action[0][1] = action[0][1] * np.pi / 4
 
                 new_observation, reward, done, info = env.step(action)
                 
@@ -123,60 +123,60 @@ class genetic_algo(object):
                 Total_Steps += 1 
                 
                 
-                old_parameters = np.array(np.reshape(observation, (1, 35)))
+                old_parameters = np.array(np.reshape(observation, (1, 8)))
                 
 #                 print(old_parameters)
 #                 old_Lidar = sum(old_parameters[:,1:30])
-                old_left_Lidar = old_parameters[:,6]
-                old_right_Lidar = old_parameters[:,24]
+#                 old_left_Lidar = old_parameters[:,6]
+#                 old_right_Lidar = old_parameters[:,24]
                 # print(sum(old_Lidar))
-                old_DIST = old_parameters[:,-5]
+                old_DIST = old_parameters[:,-6]
                 # print(old_DIST)
-                old_ANGLE = old_parameters[:,-4]
+#                 old_ANGLE = old_parameters[:,-4]
                 
                 
                 #############################
                 observation = new_observation
                 #############################
                 
-                parameters = np.array(np.reshape(observation, (1, 35)))
+                parameters = np.array(np.reshape(observation, (1, 8)))
                 
                 
 #                 new_Lidar = sum(parameters[:,1:30])
-                new_left_Lidar = parameters[:,6]
+#                 new_left_Lidar = parameters[:,6]
 #                 print("left", new_left_Lidar)
-                new_right_Lidar = parameters[:,24]
+#                 new_right_Lidar = parameters[:,24]
 #                 print("right", new_right_Lidar)
-                Lidar_Diff = np.abs(new_left_Lidar - new_right_Lidar)
+#                 Lidar_Diff = np.abs(new_left_Lidar - new_right_Lidar)
 #                 print(new_Lidar)
 
-                new_left_Lidar_Range = sum(sum(parameters[:,4:8]))/4
+#                 new_left_Lidar_Range = sum(sum(parameters[:,4:8]))/4
 #                 print("left", new_left_Lidar)
-                new_right_Lidar_Range = sum(sum(parameters[:,22:26]))/4
+#                 new_right_Lidar_Range = sum(sum(parameters[:,22:26]))/4
 #                 print("right", new_right_Lidar)
-                Lidar_Range_Diff = np.abs(new_left_Lidar_Range - new_right_Lidar_Range)
+#                 Lidar_Range_Diff = np.abs(new_left_Lidar_Range - new_right_Lidar_Range)
 #                 print(new_Lidar)
 
                 # print(sum(new_Lidar))
-                new_DIST = parameters[:,-5]
+                new_DIST = parameters[:,-6]
                 # print(new_DIST)
-                new_ANGLE = parameters[:,-4]
+#                 new_ANGLE = parameters[:,-4]
                 
                 
         
             ## ACTION BASED PENALTIES (inner for loop):
                 
                              
-            ## Adding a penalty for the physical restraints of the system, the car cannot turn more than a certain amount. The exact angle yet to be determined 
+            ## Adding a penalty for the physical restraints of the system, the arm cannot turn more than a certain amount. The exact angle yet to be determined 
 
-                if new_ANGLE > np.pi/2:   
-                    r += 100
+#                 if new_ANGLE > np.pi/2:   
+#                     r += 100
 #                     print("Recieved extra angle penalty")
 
                 
             ## 15 is an estimate for when half of the lidar measurements (30 total) are 0.5 meaning starting to head towards a wall. You want to minimize this value
             ## because the lidar scan returns the distance of a dectection of an obstacle, then its subtracted from the length of the track (1-scan) which is essentially
-            ## then the amount the car deviated from the track. Penalized if facing a wall too much:
+            ## then the amount the arm deviated from the track. Penalized if facing a wall too much:
 
 #                 if sum(new_Lidar) > 20:   
 #                     r += np.abs(sum(new_Lidar))*10
@@ -189,13 +189,13 @@ class genetic_algo(object):
 #                     r += Lidar_Diff*100
 
 
-                if Lidar_Range_Diff > 0.6:
-                    r += Lidar_Diff*100
+#                 if Lidar_Range_Diff > 0.6:
+#                     r += Lidar_Diff*100
             
             
             
             
-#             ## Here the car is penalized if facing a wall too much and heading towards it:  
+#             ## Here the arm is penalized if facing a wall too much and heading towards it:  
             
 #                 if ((sum(new_Lidar) > 20) and (sum(old_Lidar) < sum(new_Lidar))):
 #                     r += np.abs(sum(new_Lidar))*30
@@ -208,7 +208,7 @@ class genetic_algo(object):
                     
                     
             ## (outer for loop)       
-            ## Here a penalty is added if the car takes fewer steps than the previous car (hits a wall fast):
+            ## Here a penalty is added if the arm takes fewer steps than the previous arm (hits a wall fast):
                     
     #             if run == 1:
 
@@ -251,10 +251,10 @@ class genetic_algo(object):
             ## Penalties for Goal status: 
             
             if reward == -99:
-                r += np.sqrt((env.goal[0] - env.sim.car[0])**2 + (env.goal[1] - env.sim.car[1])**2) * 10 * 3
+                r += np.sqrt((env.goal[0] - env.sim.arm[0])**2 + (env.goal[1] - env.sim.arm[1])**2) * 10 * 3
 
             if not done:
-                r += np.sqrt((env.goal[0] - env.sim.car[0])**2 + (env.goal[1] - env.sim.car[1])**2) * 10 * 3
+                r += np.sqrt((env.goal[0] - env.sim.arm[0])**2 + (env.goal[1] - env.sim.arm[1])**2) * 10 * 3
 
             rs.append(r)
         GOALS_TOTAL.append(np.copy(Goal_Counter))
