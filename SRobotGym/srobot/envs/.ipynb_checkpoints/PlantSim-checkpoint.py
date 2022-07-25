@@ -62,6 +62,9 @@ class python_env(object):
         return x, y, z, theta
 
     def action(self, a):
+        
+        print(a)
+        
         self.arm = self.kinematic(a)
 
 #         self.arm = self.kinematic(a[0][0], a[0][1],a[0][2])
