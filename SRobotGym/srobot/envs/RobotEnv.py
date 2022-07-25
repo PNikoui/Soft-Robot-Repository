@@ -163,7 +163,7 @@ class SRobotEnv(gym.Env):
          #### CUSTOM observation vector ####
         sensor = self.sim.TrackStar()
         self.obs = list(np.array(sensor) / self.maxgoaldist)
-        act = action[0]
+        act = [0, 0, 0]
         self.obs.extend([dist / self.maxgoaldist, phi / pi, sign])
         self.obs.extend(act)
 

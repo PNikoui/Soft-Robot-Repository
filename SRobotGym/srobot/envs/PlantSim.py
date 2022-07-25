@@ -100,9 +100,9 @@ class python_env(object):
         return scan
     
     def TrackStar(self):
-        
-        Ex = self.goal[0] - self.arm[0]
-        Ey = self.goal[1] - self.arm[1]
+     
+        Ex = self.goal[-1][0] - self.arm[0]
+        Ey = self.goal[-1][1] - self.arm[1]
         
         PathError = [Ex,Ey]
         

@@ -98,3 +98,13 @@ class python_env(object):
             scan.append(point_dist)
 
         return scan
+    
+    def TrackStar(self):
+     
+        Ex = self.goal[-1][0] - self.arm[0]
+        Ey = self.goal[-1][1] - self.arm[1]
+        
+        PathError = [Ex,Ey]
+        
+        return PathError
+        
