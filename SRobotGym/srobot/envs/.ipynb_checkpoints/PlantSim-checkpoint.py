@@ -63,7 +63,7 @@ class python_env(object):
 
     def action(self, a):
         
-        print(a)
+#         print(a)
         
         self.arm = self.kinematic(a)
 

@@ -144,8 +144,8 @@ class SRobotEnv(gym.Env):
         self.current_step = 0
 
         # Recieving sensor information
-        sensor1 = self.sim.lidar()
-        print(sensor1,type(sensor1))
+#         sensor1 = self.sim.lidar()
+#         print(sensor1,type(sensor1))
         
 #         sensor = [0,0,0]
 #         print(type(sensor))
