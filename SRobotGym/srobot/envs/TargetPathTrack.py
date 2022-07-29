@@ -111,6 +111,8 @@ class racetrack(object):
             ax.plot(xs, ys)
             ax.add_patch(PolygonPatch(racetrack, alpha=1, zorder=2))
             plt.show()
+    
+        return racetrack, points
         
     
     
