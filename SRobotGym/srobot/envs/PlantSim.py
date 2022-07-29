@@ -19,7 +19,7 @@ class python_env(object):
         rt = racetrack(num_observations,turns, seed)
         if Pathtype == 'Linear':
             self.map, self.goal = rt.generate(plot)
-        elif Pathtype == 'Cirlcular':
+        elif Pathtype == 'Circular':
             self.map, self.goal = rt.genCircle(plot)
         
         self.arm = (0, 0, 0, 0) # x,y,theta
