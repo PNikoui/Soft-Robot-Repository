@@ -434,7 +434,7 @@ class genetic_algo(object):
 
             top_rewards = []
             for best_parent in sorted_parent_indexes:
-                top_rewards.append(np.array(rewards)[best_parent])
+                top_rewards.append(np.array(rewards,dtype=object)[best_parent])
 
             Fitness.append(min(top_rewards))
             # GOALS_HIT.append(Goal_Counter)
