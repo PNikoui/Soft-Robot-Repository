@@ -84,10 +84,10 @@ class racetrack(object):
         angles = [0]
         # Pick random radius and starting point
         len = np.random.uniform(self.min_len, self.max_len)
-        Start_seed = random.randrange(self.num_Observations)
-        angle_i = np.linspace(Start_seed,2*math.pi+Start_seed,self.num_Observations)
+        Start_seed = random.randrange(self.num_observations)
+        angle_i = np.linspace(Start_seed,2*math.pi+Start_seed,self.num_observations)
         # Looping over turns
-        for i in range(self.num_Observations):
+        for i in range(self.num_observations):
             prev_point = points[-1]
             prev_angle = angles[-1]
             new_point, new_angle = self.calc_Circle(len,angle_i[i])
