@@ -10,15 +10,18 @@ from TargetPathTrack import racetrack
 
 class python_env(object):
 
-    def __init__(self, turns, seed, plot=False):
+    def __init__(self, num_observations, turns, seed, Pathtype,plot=False):
 
         random.seed(seed)
         np.random.seed(seed)
 
         # Defining racetrack
-        rt = racetrack(turns, seed)
-        self.map, self.goal = rt.generate(plot)
-
+        rt = racetrack(num_observations,turns, seed)
+        if Pathtype == 'Linear':
+            self.map, self.goal = rt.generate(plot)
+        elif Pathtype == 'Cirlcular':
+            self.map, self.goal = rt.genCircle(plot)
+        
         self.arm = (0, 0, 0, 0) # x,y,theta
 
         self.angle_inc = (3 / 2) * math.pi / 29

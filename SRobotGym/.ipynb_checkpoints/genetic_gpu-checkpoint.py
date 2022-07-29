@@ -18,10 +18,12 @@ device = torch.device("cuda:0" if use_cuda else "cpu")
 
 class genetic_algo(object):
 
-    def __init__(self, processors, num_turns, max_step=250):
+    def __init__(self, processors, num_observations, num_turns, Pathtype, max_step=10):
         self.max_step = max_step
         self.processors = processors
         self.num_turns = num_turns
+        self.num_observations = num_observations 
+        self.Pathtype = Pathtype
 
     def init_weights(self, m):
         if ((type(m) == nn.Linear) | (type(m) == nn.Conv2d)):
@@ -265,7 +267,7 @@ class genetic_algo(object):
 
     def run_agents_n_times(self, agents, runs):
 
-        env = SRobotEnv(self.num_turns)
+        env = SRobotEnv(self.num_observations, self.num_turns,self.Pathtype)
         seeds = []
         random.seed()
         for i in range(runs):

@@ -51,7 +51,7 @@ class SRobotEnv(gym.Env):
     """
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, turns):
+    def __init__(self,num_observations, turns, Pathtype):
         super(SRobotEnv, self).__init__()
         # Define action and observation space
         # They must be gym.spaces objects
@@ -64,9 +64,11 @@ class SRobotEnv(gym.Env):
         self.maxgoaldist = 5
 
         self.turns = turns
+        self.observations = num_observations
+        self.Pathtype = Pathtype
 
         # Spawning the simulation
-        self.sim = python_env(turns, 0)
+        self.sim = python_env(num_observations, turns,0, Pathtype)
 
     def observe(self):
         dist = sqrt((self.goal[0] - self.armx)**2 + (self.goal[1] - self.army)**2) # + (self.goal[2] - self.armz)**2)
@@ -133,7 +135,7 @@ class SRobotEnv(gym.Env):
         random.seed(seed)
         np.random.seed(seed)
 
-        self.sim = python_env(self.turns, seed)
+        self.sim = python_env(self.num_observations, self.turns, seed, self.Pathtype)
 
         # Initializing the goal
         self.goal = self.sim.goal[-1]
