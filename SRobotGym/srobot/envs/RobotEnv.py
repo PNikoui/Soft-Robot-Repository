@@ -64,7 +64,7 @@ class SRobotEnv(gym.Env):
         self.maxgoaldist = 5
 
         self.turns = turns
-        self.observations = num_observations
+        self.num_observations = num_observations
         self.Pathtype = Pathtype
 
         # Spawning the simulation
