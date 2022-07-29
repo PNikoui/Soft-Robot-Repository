@@ -116,11 +116,11 @@ class SRobotEnv(gym.Env):
         self.current_step += 1
 
         if wallhit(sensor):
-            print('I HIT A WALL!')
+            print('END EFFECTOR OUT OF TOLERANCE!')
             return self.obs, -99, True, {}
 
         if goalhit(dist):
-            print('I HIT THE GOAL!')
+            print('TRAJECTORY SUCCESSFULLY COMPLETED!')
             return self.obs, 0, True, {}
 
         # Defining the reward shaping
