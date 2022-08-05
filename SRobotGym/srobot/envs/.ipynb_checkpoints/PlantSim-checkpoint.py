@@ -54,13 +54,13 @@ class python_env(object):
     def kinematic(self, pressure):
         
         # 2nd order transfer function approximation b = 2 a = 5
-        x = 2/(pressure[0][0]**2 + 5*pressure[0][0] + 5)
+        x = self.arm[0] + 1/(pressure[0][0]**2 + 5*pressure[0][0] + 5)
 
-        y = 2/(pressure[0][1]**2 + 5*pressure[0][1] + 5)
+        y = self.arm[1] + 1/(pressure[0][1]**2 + 5*pressure[0][1] + 5)
         
-        z = 2/(pressure[0][2]**2 + 5*pressure[0][2] + 5)
+        z = self.arm[2] + 1/(pressure[0][2]**2 + 5*pressure[0][2] + 5)
         
-        theta = math.atan(x/y)
+        theta = self.arm[3] + math.atan(x/y)
 
         return x, y, z, theta
 
@@ -102,12 +102,40 @@ class python_env(object):
 
         return scan
     
-    def TrackStar(self):
+    def TrackStar(self): ## Redefine the track to be the whole 2D/3D space, sensor measures to the border and returns wall hit if too close to it
+        scan = []
+
+        for i in range(2):
+            angle = 0 + i * (math.pi/2)
+            laser = sg.LineString([(self.arm[0], self.arm[1]),
+                                   (self.laser_len * math.cos(self.arm[3] + angle) + self.arm[0],
+                                   self.laser_len * math.sin(self.arm[3] + angle) + self.arm[1])])
+            
+            
+            point_dist = 5
+            
+            int = laser.intersection(self.map)
+
+            # Checking for multiline object
+            try:
+                coords = int.coords
+            except NotImplementedError:
+                coords = int.geoms[0].coords
+
+            if coords != []:
+                point = list(coords)
+                d = math.sqrt((self.arm[0] - point[0][0])**2 + (self.arm[1] - point[0][1])**2)
+                if d < point_dist:
+                    point_dist = d
+
+            scan.append(point_dist)
+
+        return scan
      
-        Ex = self.goal[-1][0] - self.arm[0]
-        Ey = self.goal[-1][1] - self.arm[1]
+#         Ex = self.goal[-1][0] - self.arm[0]
+#         Ey = self.goal[-1][1] - self.arm[1]
         
-        PathError = [Ex,Ey]
+#         PathError = [Ex,Ey]
         
-        return PathError
+#         return PathError
         

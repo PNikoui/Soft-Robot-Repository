@@ -108,6 +108,12 @@ class genetic_algo(object):
                 mu = mu.cpu().detach().numpy()
                 action = mu.reshape(1,3)
                 
+                if action.greater(1.42): # Set the pressure limit to the plant
+                    
+                    act_idx = [n for n,i in enumerate(action) if i>1.42]
+                    action[act_idx] =1.42
+                    
+                    r += 10
 
 #                 action[0][1] = action[0][1] * np.pi / 4
 
@@ -125,7 +131,8 @@ class genetic_algo(object):
                 Total_Steps += 1 
                 
                 
-                old_parameters = np.array(np.reshape(observation, (1, 8)))
+#                 old_parameters = np.array(np.reshape(observation, (1, 8)))
+                old_parameters = np.array(np.reshape(observation, (1, 36)))
                 
 #                 print(old_parameters)
 #                 old_Lidar = sum(old_parameters[:,1:30])
@@ -141,8 +148,9 @@ class genetic_algo(object):
                 observation = new_observation
                 #############################
                 
-                parameters = np.array(np.reshape(observation, (1, 8)))
-                
+#                 parameters = np.array(np.reshape(observation, (1, 8)))
+
+                parameters = np.array(np.reshape(observation, (1, 36)))
                 
 #                 new_Lidar = sum(parameters[:,1:30])
 #                 new_left_Lidar = parameters[:,6]

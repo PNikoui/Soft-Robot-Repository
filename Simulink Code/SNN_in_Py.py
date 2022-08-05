@@ -10,9 +10,9 @@ class Network:
         self.model = SNN.Net(num_inputs=3, num_hidden=32, num_outputs=3)
 
     def Load_model(self):
-    
-    
-        self.model = self.model.load_state_dict(torch.load('SNN_Learned_Weights.pth'))
+        
+        self.model = self.model.load_state_dict(torch.load('turn_1.pth'))
+#         self.model = self.model.load_state_dict(torch.load('SNN_Learned_Weights.pth'))
     
 #         return self.model
 
