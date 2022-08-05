@@ -6,7 +6,8 @@ device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cp
 
 beta = 0.9  # neuron decay rate 
 spike_grad = surrogate.fast_sigmoid()
-num_steps = 100    
+num_steps = 100   
+
 # class Net(torch.nn.Module):
     
 #     #### Build the neural network
@@ -34,13 +35,16 @@ class Net(nn.Module):
         self.num_steps = num_steps
         self.fc1 = nn.Linear(num_inputs, num_hidden)
         self.lif1 = snn.Leaky(beta=beta, output=True)
-        self.fc2 = nn.Linear(num_hidden, num_outputs)
-#         self.lif2 = snn.Leaky(beta=beta)
-
+#         self.fc2 = nn.Linear(num_hidden, num_outputs)
+        self.fc2 = nn.Linear(num_hidden, num_hidden)
+        self.lif2 = snn.Leaky(beta=beta, output=True)
+        self.fc3 = nn.Linear(num_hidden, num_outputs)
+        
+        
     def forward(self, x): 
 #         print(type(x))
         mem1 = self.lif1.init_leaky()
-#         mem2 = self.lif2.init_leaky()
+        mem2 = self.lif2.init_leaky()
 
 #         spk2_rec = torch.empty((num_steps,20,3)) #[]  # Record the output trace of spikes
 #         mem2_rec = torch.empty((num_steps,20,3)) #[]  # Record the output trace of membrane potential
@@ -50,7 +54,8 @@ class Net(nn.Module):
             cur1 = self.fc1(x.flatten(1))
             spk1, mem1 = self.lif1(cur1, mem1)
             cur2 = self.fc2(spk1)
-#             spk2, mem2 = self.lif2(cur2, mem2)
+            spk2, mem2 = self.lif2(cur2, mem2)
+            cur3 = self.fc3(spk2)
 
 ############ TEST ##############
 #             cur1 = self.fc1(x.flatten(1))
@@ -62,7 +67,7 @@ class Net(nn.Module):
 #             spk2_rec[step] = spk2
 #             mem2_rec[step] = mem2
 #         print([type(spk2_rec),type(mem2_rec)])
-        return cur2
+        return cur3 #cur2
 #         return torch.stack(list(spk2_rec), dim=0), torch.stack(list(mem2_rec), dim=0)  #torch.stack(spk2_rec), torch.stack(mem2_rec)
 
 net = Net().to(device)
