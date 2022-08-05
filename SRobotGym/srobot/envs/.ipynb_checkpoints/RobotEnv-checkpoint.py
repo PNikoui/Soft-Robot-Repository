@@ -16,11 +16,11 @@ from math import pi, sqrt, atan2, cos, sin, acos
 # Defining helper functions wrt. reward shaping
 
 def wallhit(scan):
-    thresh = 0.30
+    thresh = 2
     return min(scan) < thresh
 
 def goalhit(dist):
-    thresh = 0.1
+    thresh = 2
     return dist < thresh
 
 def closer(dist1, dist2):
@@ -77,7 +77,7 @@ class SRobotEnv(gym.Env):
 #         lengthA = self.goal.length();
 #         lengthB = self.arm.length();
 #         angle_to_goal = acos(dot / (lengthA * lengthB) );
-        phi, sign = diff(self.armz, angle_to_goal)
+        phi, sign = diff(self.theta, angle_to_goal)
         return dist, phi, sign
 
     def step(self, action):
@@ -106,8 +106,10 @@ class SRobotEnv(gym.Env):
 #         self.obs.extend(act)
 
       #### CUSTOM observation vector ####
-        sensor = self.sim.TrackStar()
-        self.obs = list(np.array(sensor) / self.maxgoaldist)
+#         sensor = self.sim.TrackStar()
+        sensor = self.sim.lidar()
+#         self.obs = list(np.array(sensor) / self.maxgoaldist)
+        self.obs = list(1 - np.array(sensor) / self.maxgoaldist)
         act = action[0]
         self.obs.extend([dist / self.maxgoaldist, phi / pi, sign])
         self.obs.extend(act)
@@ -163,8 +165,10 @@ class SRobotEnv(gym.Env):
 #         self.obs.extend(act)
 
          #### CUSTOM observation vector ####
-        sensor = self.sim.TrackStar()
-        self.obs = list(np.array(sensor) / self.maxgoaldist)
+#         sensor = self.sim.TrackStar()
+        sensor = self.sim.lidar()
+#         self.obs = list(np.array(sensor) / self.maxgoaldist)
+        self.obs = list(1 - np.array(sensor) / self.maxgoaldist)
         act = [0, 0, 0]
         self.obs.extend([dist / self.maxgoaldist, phi / pi, sign])
         self.obs.extend(act)

@@ -11,7 +11,7 @@ from descartes import PolygonPatch
 # Defining racetract class
 class racetrack(object):
 
-    def __init__(self, num_observations, num_turns, seed, max_len=10, min_len=1, max_angle= math.pi / 2, min_angle=- math.pi / 2):
+    def __init__(self, num_observations, num_turns, seed, max_len=30, min_len=1, max_angle= math.pi / 2, min_angle=- math.pi / 2):
         # Setting seed
         np.random.seed(seed)
 
@@ -138,7 +138,7 @@ class racetrack(object):
         # Generating the track
         track = sg.LineString(points)
         p0 = Point((self.init_point))
-        racetrack = p0.buffer(50, cap_style = 3)
+        racetrack = p0.buffer(32, cap_style = 3)
 #         inner = border.buffer(-50)
 #         racetrack = outer - inner
 
@@ -153,7 +153,7 @@ class racetrack(object):
 #             ax.set_ylim(min(ys)-5,max(ys)+5)
             ax.plot(xs, ys, linewidth = 2)
             ax.plot(xs[1:3],ys[1:3],'r--')
-            ax.add_patch(PolygonPatch(racetrack, alpha=0.25, zorder=2))
+            ax.add_patch(PolygonPatch(racetrack, alpha=0.05, zorder=2))
             plt.show()
     
         return racetrack, points

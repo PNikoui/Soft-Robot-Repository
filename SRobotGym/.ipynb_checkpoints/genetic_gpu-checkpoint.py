@@ -108,7 +108,7 @@ class genetic_algo(object):
                 mu = mu.cpu().detach().numpy()
                 action = mu.reshape(1,3)
                 
-                if action.greater(1.42): # Set the pressure limit to the plant
+                if action.any() > 1.42: # Set the pressure limit to the plant
                     
                     act_idx = [n for n,i in enumerate(action) if i>1.42]
                     action[act_idx] =1.42
@@ -220,27 +220,27 @@ class genetic_algo(object):
             ## (outer for loop)       
             ## Here a penalty is added if the arm takes fewer steps than the previous arm (hits a wall fast):
                     
-    #             if run == 1:
+                if run == 1:
 
-    #                 if Action_Counter[0] > Action_Counter[1]:
-    #                      r += np.abs(Action_Counter[0] - Action_Counter[1])*2
-
-
-#                 if run == runs-1:
-
-    #                 if Action_Counter[1] > Action_Counter[2]:
-    #                     r += np.abs(Action_Counter[1] - Action_Counter[2])*2
+                    if Action_Counter[0] > Action_Counter[1]:
+                         r += np.abs(Action_Counter[0] - Action_Counter[1])*2
 
 
-                    ## Bad Momentum (Number of successful steps decrease for all runs)
+                if run == runs-1:
 
-#                     if (Action_Counter[0] > Action_Counter[1]) and (Action_Counter[1] > Action_Counter[2]):
-#                         r += (np.abs(Action_Counter[0] - Action_Counter[1]) + np.abs(Action_Counter[1] - Action_Counter[2]))*10 
+                    if Action_Counter[1] > Action_Counter[2]:
+                        r += np.abs(Action_Counter[1] - Action_Counter[2])*2
 
-    #             if run == 3:
 
-    #                 if Action_Counter[2] > Action_Counter[3]:
-    #                     r += np.abs(Action_Counter[2] - Action_Counter[3])*2
+                    # Bad Momentum (Number of successful steps decrease for all runs)
+
+                    if (Action_Counter[0] > Action_Counter[1]) and (Action_Counter[1] > Action_Counter[2]):
+                        r += (np.abs(Action_Counter[0] - Action_Counter[1]) + np.abs(Action_Counter[1] - Action_Counter[2]))*10 
+
+                if run == 3:
+
+                    if Action_Counter[2] > Action_Counter[3]:
+                        r += np.abs(Action_Counter[2] - Action_Counter[3])*2
 
 
     #                 ## Bad Momentum (Number of successful steps decrease for all runs)

@@ -77,7 +77,7 @@ class SRobotEnv(gym.Env):
 #         lengthA = self.goal.length();
 #         lengthB = self.arm.length();
 #         angle_to_goal = acos(dot / (lengthA * lengthB) );
-        phi, sign = diff(self.armz, angle_to_goal)
+        phi, sign = diff(self.theta, angle_to_goal)
         return dist, phi, sign
 
     def step(self, action):
