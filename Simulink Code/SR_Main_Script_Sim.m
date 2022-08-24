@@ -128,6 +128,31 @@ SIM = sim('SR_SNN_Extrinsic_code.slx');
 %     DATA = [DATA;Di];
 % end
 %%
+% Generic set up 
+% clear, close, clc
+
+% Simulation of the model implemented in Simulink
+open('SR_SNN_Extrinsic_code.slx')
+Ts = 1e-3;
+for i = 1:6
+    % Specific step value
+    STEP = 20*i;
+        
+    % Simulate the system
+    sim('SR_SNN_Extrinsic_code.slx')
+           
+    % Plot the results
+    figure(1)
+    title("Step responses")
+    plot(tout, theta*180/pi, 'b')
+    hold on, grid on
+    plot(tout, theta_d*180/pi, 'r')
+    xlabel('time $t$', 'Interpreter','latex','FontSize',12)
+    ylabel('Rotation angle [deg]', 'Interpreter','latex','FontSize',12)
+    sprintf('The error at %d is %d.',20*i, (theta(end) - theta_d(end))*180/pi)
+end
+
+%%
 Pos = SIM.ModelOutput.data;
 %% 1-D
 plot(Pos(:,1),'-',LineWidth=2)
