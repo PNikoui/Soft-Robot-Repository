@@ -90,7 +90,7 @@ class SRobotEnv(gym.Env):
         old_dist, old_phi, old_sign = self.observe()
         self.oldx, self.oldy = self.armx, self.army
 
-        self.sim.action(self.armtheta,self.armd_theta,self.arndd_theta,action)
+        self.sim.action(self.sim.arm[2],self.sim.arm[3],self.sim.arm[4],action)
 
         # Fetching the resulting lidar as well as postion data
 #         sensor = self.sim.lidar()

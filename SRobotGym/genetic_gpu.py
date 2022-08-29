@@ -96,7 +96,8 @@ class genetic_algo(object):
             
 
             for _ in range(self.max_step):
-                inp = torch.tensor(observation[:,0:3]).type('torch.FloatTensor').cuda()
+#                 inp = torch.tensor(observation[:,0:3]).type('torch.FloatTensor').cuda()
+                inp = torch.tensor(observation).type('torch.FloatTensor').cuda()
                                 
                 # print(torch.cuda.device_count())
                 if torch.cuda.device_count() > 1:

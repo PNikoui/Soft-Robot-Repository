@@ -18,9 +18,14 @@ class python_env(object):
         # Defining racetrack
         rt = racetrack(num_observations,turns, seed)
         if Pathtype == 'Linear':
-            self.map, self.goal = rt.generate(plot)
+#             self.map, self.goal = rt.generate(plot)
+            self.map, self.points = rt.generate(plot)
+            self.goal = random.choice(self.points)
         elif Pathtype == 'Circular':
-            self.map, self.goal = rt.genCircle(plot)
+#             self.map, self.goal = rt.genCircle(plot)
+            self.map, self.points = rt.generate(plot)
+            print(self.points)
+            self.goal = random.choice(self.points)
         
 #         self.arm = (0, 0, 0, 0) # x,y,theta
         
@@ -37,6 +42,7 @@ class python_env(object):
         self.M = 0.5
         self.g = 9.81
         self.T_ext = 0
+        
         
         
         self.arm = (0,-self.b,0,0,0) # x, y, theta, dthetha, ddtheta
@@ -99,7 +105,7 @@ class python_env(object):
 #         %    peculiar to the skeletal muscle.
 
 
-        L = sqrt(self.a**2 + self.b**2 + 2*self.a*self.b*math.cos(theta)) # % AB distance
+        L = np.sqrt(self.a**2 + self.b**2 + 2*self.a*self.b*math.cos(theta)) # % AB distance
         d = self.a*self.b*math.sin(theta)/L # % E-AB distance
         DL = self.a + self.b - L # % Contracted bicep length variation, DL = L0 - L(theta)
 
@@ -107,7 +113,8 @@ class python_env(object):
 #         %    following static force model results for biceps and triceps:
         eps_b = min(DL/self.l0, self.eps_max)
         eps_t = max(self.eps_max - self.r*theta/self.l0, 0)
-
+        
+        print()
         F_b = min(u*self.F_max*(1 - eps_b/self.eps_max), self.F_max)
         F_t = min((1 - u)*self.F_max*(1 - eps_t/self.eps_max), self.F_max)
 
