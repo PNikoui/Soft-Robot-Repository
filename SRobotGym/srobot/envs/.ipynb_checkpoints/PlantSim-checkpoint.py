@@ -21,6 +21,7 @@ class python_env(object):
             self.map, self.goal = rt.generate(plot)
         elif Pathtype == 'Circular':
             self.map, self.goal = rt.genCircle(plot)
+            
         
 #         self.arm = (0, 0, 0, 0) # x,y,theta
         
@@ -109,7 +110,6 @@ class python_env(object):
         eps_b = min(DL/self.l0, self.eps_max)
         eps_t = max(self.eps_max - self.r*theta/self.l0, 0)
         
-        print()
         F_b = min(u*self.F_max*(1 - eps_b/self.eps_max), self.F_max)
         F_t = min((1 - u)*self.F_max*(1 - eps_t/self.eps_max), self.F_max)
 
@@ -127,6 +127,9 @@ class python_env(object):
     
         d_thetaNEW = (thetaNEW - theta)/self.dt
         dd_thetaNEW = (d_thetaNEW - d_theta)/self.dt
+
+        x = self.b * math.cos(thetaNEW)
+        y = self.b * math.sin(thetaNEW)
         
         return x, y, thetaNEW, d_thetaNEW, dd_thetaNEW
 

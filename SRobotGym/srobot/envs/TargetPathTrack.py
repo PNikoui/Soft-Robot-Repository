@@ -148,6 +148,7 @@ class racetrack(object):
 #         inner = border.buffer(-50)
 #         racetrack = outer - inner
 
+
         if plot:
             
             xs = [a[0] for a in points]
@@ -162,6 +163,6 @@ class racetrack(object):
             ax.add_patch(PolygonPatch(racetrack, alpha=0.05, zorder=2))
             plt.show()
     
-        return racetrack, points[Goal_seed]
+        return racetrack, np.asarray(points[Goal_seed]).reshape(-1,1).T
     
     

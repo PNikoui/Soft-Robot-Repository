@@ -113,6 +113,7 @@ class SRobotEnv(gym.Env):
         act = action[0]
         self.obs.extend([dist / self.maxgoaldist, phi / pi, sign])
         self.obs.extend(act)
+        self.obs.extend(self.sim.goal[-1])
 
         # Incrementing step counter
         self.current_step += 1
@@ -172,5 +173,6 @@ class SRobotEnv(gym.Env):
         act = [0]
         self.obs.extend([dist / self.maxgoaldist, phi / pi, sign])
         self.obs.extend(act)
+        self.obs.extend(self.sim.goal[-1])
 
         return np.array(self.obs).reshape(1, -1)

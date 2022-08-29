@@ -96,25 +96,25 @@ class genetic_algo(object):
             
 
             for _ in range(self.max_step):
-#                 inp = torch.tensor(observation[:,0:3]).type('torch.FloatTensor').cuda()
-                inp = torch.tensor(observation).type('torch.FloatTensor').cuda()
+                inp = torch.tensor(observation[:,34:36]).type('torch.FloatTensor').cuda()
+                # inp = torch.tensor(observation[:,0:3]).type('torch.FloatTensor').cuda()
                                 
                 # print(torch.cuda.device_count())
                 if torch.cuda.device_count() > 1:
                     print("Let's use", torch.cuda.device_count(), "GPUs!")
        
                 agent.to(device)
-                
                 mu = agent(inp)
                 mu = mu.cpu().detach().numpy()
-                action = mu.reshape(1,3)
+                action = mu
+                # action = mu.reshape(1,3)
                 
-                if action.any() > 1.42: # Set the pressure limit to the plant
+                # if action.any() > 1.42: # Set the pressure limit to the plant -- Saturation only for Robot
                     
-                    act_idx = [n for n,i in enumerate(action) if i>1.42]
-                    action[act_idx] =1.42
+                #     act_idx = [n for n,i in enumerate(action) if i>1.42]
+                #     action[act_idx] =1.42
                     
-                    r += 10
+                #     r += 10
 
 #                 action[0][1] = action[0][1] * np.pi / 4
 
