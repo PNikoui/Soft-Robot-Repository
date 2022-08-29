@@ -121,6 +121,7 @@ class racetrack(object):
         len = 0.14*0.5
         angle_i = np.linspace(-math.pi/2,math.pi/2,self.num_observations)
 #         Start_seed = random.choice(angle_i)
+        Goal_seed = random.randrange(10,self.num_observations-10)  ##  Don't select a target to be too close to zero or the max contraction
 #         angle_i = 
 #         print(Start_seed)
         # Initializing list of points
@@ -161,6 +162,6 @@ class racetrack(object):
             ax.add_patch(PolygonPatch(racetrack, alpha=0.05, zorder=2))
             plt.show()
     
-        return racetrack, points
+        return racetrack, points[Goal_seed]
     
     

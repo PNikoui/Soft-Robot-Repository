@@ -18,14 +18,9 @@ class python_env(object):
         # Defining racetrack
         rt = racetrack(num_observations,turns, seed)
         if Pathtype == 'Linear':
-#             self.map, self.goal = rt.generate(plot)
-            self.map, self.points = rt.generate(plot)
-            self.goal = random.choice(self.points)
+            self.map, self.goal = rt.generate(plot)
         elif Pathtype == 'Circular':
-#             self.map, self.goal = rt.genCircle(plot)
-            self.map, self.points = rt.generate(plot)
-            print(self.points)
-            self.goal = random.choice(self.points)
+            self.map, self.goal = rt.genCircle(plot)
         
 #         self.arm = (0, 0, 0, 0) # x,y,theta
         
