@@ -77,7 +77,7 @@ class SRobotEnv(gym.Env):
 #         lengthA = self.goal.length();
 #         lengthB = self.arm.length();
 #         angle_to_goal = acos(dot / (lengthA * lengthB) );
-        phi, sign = diff(self.theta, angle_to_goal)
+        phi, sign = diff(self.armtheta, angle_to_goal)
         return dist, phi, sign
 
     def step(self, action):
@@ -90,11 +90,11 @@ class SRobotEnv(gym.Env):
         old_dist, old_phi, old_sign = self.observe()
         self.oldx, self.oldy = self.armx, self.army
 
-        self.sim.action(action)
+        self.sim.action(self.armtheta,self.armd_theta,self.arndd_theta,action)
 
         # Fetching the resulting lidar as well as postion data
 #         sensor = self.sim.lidar()
-        self.armx, self.army, self.armz, self.theta = self.sim.arm
+        self.armx, self.army, self.armtheta, self.armd_theta,self.armdd_theta = self.sim.arm
 
         # Calculating current distances and angles
         dist, phi, sign = self.observe()
@@ -142,7 +142,7 @@ class SRobotEnv(gym.Env):
         # Initializing the goal
         self.goal = self.sim.goal[-1]
 
-        self.sim.spawn(0, 0, 0, 0)
+        self.sim.spawn(0, 0, 0, 0, 0)
 
         # Initializing step counter
         self.current_step = 0
@@ -153,7 +153,7 @@ class SRobotEnv(gym.Env):
         
 #         sensor = [0,0,0]
 #         print(type(sensor))
-        self.armx, self.army, self.armz, self.theta = self.sim.arm
+        self.armx, self.army, self.armtheta, self.d_theta, self.armdd_theta = self.sim.arm
 
         # Calculating distances and angles for the observation vector
         dist, phi, sign = self.observe()
@@ -169,7 +169,7 @@ class SRobotEnv(gym.Env):
         sensor = self.sim.lidar()
 #         self.obs = list(np.array(sensor) / self.maxgoaldist)
         self.obs = list(1 - np.array(sensor) / self.maxgoaldist)
-        act = [0, 0, 0]
+        act = [0]
         self.obs.extend([dist / self.maxgoaldist, phi / pi, sign])
         self.obs.extend(act)
 

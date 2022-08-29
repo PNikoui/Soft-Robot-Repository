@@ -99,8 +99,8 @@ class python_env(object):
 #         %    peculiar to the skeletal muscle.
 
 
-        L = sqrt(self.a^2 + self.b^2 + 2*self.a*self.b*cos(theta)) # % AB distance
-        d = self.a*self.b*sin(theta)/L # % E-AB distance
+        L = sqrt(self.a**2 + self.b**2 + 2*self.a*self.b*math.cos(theta)) # % AB distance
+        d = self.a*self.b*math.sin(theta)/L # % E-AB distance
         DL = self.a + self.b - L # % Contracted bicep length variation, DL = L0 - L(theta)
 
 #         % => Because the considered muscles are supposed to have the same initial length L0, the
@@ -108,8 +108,8 @@ class python_env(object):
         eps_b = min(DL/self.l0, self.eps_max)
         eps_t = max(self.eps_max - self.r*theta/self.l0, 0)
 
-        F_b = min(u*self.F_max*(1 - self.eps_b/self.eps_max), self.F_max)
-        F_t = min((1 - u)*self.F_max*(1 - self.eps_t/self.eps_max), self.F_max)
+        F_b = min(u*self.F_max*(1 - eps_b/self.eps_max), self.F_max)
+        F_t = min((1 - u)*self.F_max*(1 - eps_t/self.eps_max), self.F_max)
 
         T_static = d*F_b - self.r*F_t # % Equilibium torque
 
