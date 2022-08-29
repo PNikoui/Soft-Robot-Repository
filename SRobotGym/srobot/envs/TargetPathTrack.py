@@ -22,7 +22,7 @@ class racetrack(object):
         self.max_angle = max_angle
         self.min_angle = min_angle
 
-        self.init_point = (0, 0)
+        self.init_point = (0, -0.14*0.5)
 
     def calc_new_point(self, prev_point, prev_angle):
 
@@ -118,14 +118,19 @@ class racetrack(object):
         
     def genCircle(self, plot=False):  ## Use a 50mm by 50mm by 50mmm grid 
         
-        
+        len = 0.14*0.5
+        angle_i = np.linspace(-math.pi/2,math.pi/2,self.num_observations)
+#         Start_seed = random.choice(angle_i)
+#         angle_i = 
+#         print(Start_seed)
         # Initializing list of points
         points = [self.init_point]
         angles = [0]
         # Pick random radius and starting point
-        len = np.random.uniform(self.min_len, self.max_len)
-        Start_seed = random.randrange(self.num_observations)
-        angle_i = np.linspace(Start_seed,2*math.pi+Start_seed,self.num_observations)
+#         len = np.random.uniform(self.min_len, self.max_len) ## Only for Pisa robot
+#         Start_seed = random.randrange(self.num_observations)
+#         angle_i = np.linspace(Start_seed,2*math.pi+Start_seed,self.num_observations)
+
         # Looping over turns
         for i in range(self.num_observations):
             prev_point = points[-1]

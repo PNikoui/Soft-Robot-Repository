@@ -59,7 +59,7 @@ class Network(nn.Module):
     
     def Update(self,Error,Threshold):
 
-        if Error > Threshold:  ## For now, define a threshold for when to activate STDP
+        if Error > Threshold:  ## For now, define a threshold for when to activate STDP. 5 cm 
 
             # Initialize pre- and post synaptic updates 
             Dw_N = 0

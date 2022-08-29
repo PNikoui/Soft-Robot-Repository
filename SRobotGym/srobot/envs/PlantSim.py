@@ -22,7 +22,24 @@ class python_env(object):
         elif Pathtype == 'Circular':
             self.map, self.goal = rt.genCircle(plot)
         
-        self.arm = (0, 0, 0, 0) # x,y,theta
+#         self.arm = (0, 0, 0, 0) # x,y,theta
+        
+        self.F_max = 1000  #% Maximum force of 1000 N
+        self.eps_max = 0.25 # % Maximum contraction ratio
+        self.a = 0.5  #% Bicep #(1) active initial length of 50 cm
+        self.b = 0.14*self.a
+        self.l0 = self.a
+        self.r = 0.025
+        self.T_ext = 0
+        self.I = 1/0.05
+        self.f_v = 50/5.0292
+        self.L_g = 0.25*0
+        self.M = 0.5
+        self.g = 9.81
+        self.T_ext = 0
+        
+        
+        self.arm = (0,-self.b,0,0,0) # x, y, theta, dthetha, ddtheta
 
         self.angle_inc = (3 / 2) * math.pi / 29
 
@@ -32,9 +49,13 @@ class python_env(object):
         self.dt = 0.1
         self.wheelbase = 0.325
 
-    def spawn(self, x, y, z, theta):
+#     def spawn(self, x, y, z, theta):
 
-        self.arm = (x, y, z, theta)
+#         self.arm = (x, y, z, theta)
+
+    def spawn(self, x, y, theta,d_theta,dd_theta):
+
+        self.arm = (x,y,theta,d_theta,dd_theta)
 
 #     def kinematic(self, velocity, steering_angle):
 
@@ -65,21 +86,9 @@ class python_env(object):
 #         return x, y, z, theta
 
 
-    def kinematic(self,theta,u):
+    def kinematic(self,theta,d_theta,dd_theta,u):
         
-        
-        
-        F_max = 1000;  #% Maximum force of 1000 N
-        eps_max = 0.25; # % Maximum contraction ratio
-        a = 0.5;  #% Bicep #(1) active initial length of 50 cm
-        b = 0.14*a;
-        l0 = a;
-        r = 0.025;
-
-        L = sqrt(a^2 + b^2 + 2*a*b*cos(theta)); # % AB distance
-        d = a*b*sin(theta)/L; # % E-AB distance
-        DL = a + b - L; # % Contracted bicep length variation, DL = L0 - L(theta)
-                         #% Triceps elongation is r*theta since r is constant
+                     #% Triceps elongation is r*theta since r is constant
 
 #         % Actuator (force) static model F(u, eps) = u*F_max*(1 - eps/eps_max) 
 #         % u, normalized control variable in (0, 1)
@@ -89,15 +98,20 @@ class python_env(object):
 #         %    skeletal muscle without however being able to take into account the passive tension
 #         %    peculiar to the skeletal muscle.
 
+
+        L = sqrt(self.a^2 + self.b^2 + 2*self.a*self.b*cos(theta)) # % AB distance
+        d = self.a*self.b*sin(theta)/L # % E-AB distance
+        DL = self.a + self.b - L # % Contracted bicep length variation, DL = L0 - L(theta)
+
 #         % => Because the considered muscles are supposed to have the same initial length L0, the
 #         %    following static force model results for biceps and triceps:
-        eps_b = min(DL/l0, eps_max);
-        eps_t = max(eps_max - r*theta/l0, 0);
+        eps_b = min(DL/self.l0, self.eps_max)
+        eps_t = max(self.eps_max - self.r*theta/self.l0, 0)
 
-        F_b = min(u*F_max*(1 - eps_b/eps_max), F_max);
-        F_t = min((1 - u)*F_max*(1 - eps_t/eps_max), F_max);
+        F_b = min(u*self.F_max*(1 - self.eps_b/self.eps_max), self.F_max)
+        F_t = min((1 - u)*self.F_max*(1 - self.eps_t/self.eps_max), self.F_max)
 
-        T_static = d*F_b - r*F_t; # % Equilibium torque
+        T_static = d*F_b - self.r*F_t # % Equilibium torque
 
 #         % Or, equivalently:
 #         % f = F_max*(d*(1 - DL/(l0*eps_max)) + r^2*theta/(l0*eps_max));
@@ -107,15 +121,24 @@ class python_env(object):
 
 #         T_{dyn} = T_{static} - f_v\dot\theta-MgL_gsin(\theta) - T_{ext}= I\ddot\theta
 
-        T_static - f_v*dtheta - M*g*L_g *sin(theta) - T_ext
-        theta = math.asin((I*dd_theta + f_v*d_theta +T_ext)/M*g*L_g)
-        return T_static
+        thetaNEW = math.asin((self.I*dd_theta - T_static + self.f_v*d_theta + self.T_ext)/self.M*self.g*self.L_g)
+    
+        d_thetaNEW = (thetaNEW - theta)/self.dt
+        dd_thetaNEW = (d_thetaNEW - d_theta)/self.dt
+        
+        return x, y, thetaNEW, d_thetaNEW, dd_thetaNEW
 
-    def action(self, a):
+#     def action(self, a):
+        
+# #         print(a)
+        
+#         self.arm = self.kinematic(a)
+
+    def action(self, thetaNEW, d_thetaNEW, dd_thetaNEW, a):
         
 #         print(a)
         
-        self.arm = self.kinematic(a)
+        self.arm = self.kinematic(thetaNEW, d_thetaNEW, dd_thetaNEW, a)
 
 #         self.arm = self.kinematic(a[0][0], a[0][1],a[0][2])
     
