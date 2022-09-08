@@ -119,7 +119,7 @@ class racetrack(object):
     def genCircle(self, plot=False):  ## Use a 50mm by 50mm by 50mmm grid 
         
         len = 0.14*0.5
-        angle_i = np.linspace(-math.pi/2,math.pi/2,self.num_observations)
+        angle_i = np.linspace(math.pi/2,-math.pi/2,self.num_observations)
 #         Start_seed = random.choice(angle_i)
         Goal_seed = random.randrange(10,self.num_observations-10)  ##  Don't select a target to be too close to zero or the max contraction
 #         angle_i = 

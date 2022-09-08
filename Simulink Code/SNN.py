@@ -33,10 +33,11 @@ class Net(nn.Module):
 #         self.fc3 = nn.Linear(self.num_hidden, self.num_outputs)
 
 ## For rate coding:
-        self.fc1 = nn.Linear(num_steps, num_hidden)
+#         self.fc1 = nn.Linear(num_steps, num_hidden)
 
 
-#         self.fc1 = nn.Linear(num_inputs, num_hidden)
+## Without Spike Encoding
+        self.fc1 = nn.Linear(num_inputs, num_hidden)
         self.lif1 = snn.Leaky(beta=beta, output=True)
         self.fc2 = nn.Linear(num_hidden, num_hidden)
         self.lif2 = snn.Leaky(beta=beta, output=True)
@@ -48,9 +49,9 @@ class Net(nn.Module):
 
     def forward(self, x):
         
-        DIST = torch.randint(0,2, size=(self.num_inputs,self.num_hidden))
-#         x = torch.round(DIST*x)*x
-        x = DIST@x.type(torch.LongTensor)
+#         DIST = torch.randint(0,2, size=(self.num_inputs,self.num_hidden))
+# #         x = torch.round(DIST*x)*x
+#         x = DIST@x.type(torch.LongTensor)
         
 #         print(type(x))
         mem1 = self.lif1.init_leaky()

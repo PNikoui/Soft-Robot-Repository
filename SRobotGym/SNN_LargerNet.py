@@ -61,9 +61,9 @@ class Net(nn.Module):
             spk1, mem1 = self.lif1(cur1, mem1)
             cur2 = self.fc2(spk1)
             spk2, mem2 = self.lif2(cur2, mem2)
-            cur3 = self.fc3(x)
+            cur3 = self.fc3(spk2)
             spk3, mem3 = self.lif3(cur3, mem3)
-            cur4 = self.fc4(x)
+            cur4 = self.fc4(spk3)
 #             spk1, mem1 = self.lif1(cur1, mem1)
 
 ############ TEST ##############

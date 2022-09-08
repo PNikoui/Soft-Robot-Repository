@@ -6,7 +6,8 @@ import copy
 import matplotlib.pyplot as plt 
 
 # from DeepFNN_4Layers import seekndestroy
-from SNN import Net
+# from SNN import Net
+from SNN_LargerNet import Net
 # from DeepFNN_2Layers_LSTM import seekndestroy
 from RobotEnv import SRobotEnv
 from RobotEnv import closer

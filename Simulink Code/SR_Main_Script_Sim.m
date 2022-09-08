@@ -8,7 +8,7 @@ NTimeSteps = 10;
 NObservations = 10;  %% How many waypoints on the trajectory
 NStepPerTarget = NTimeSteps/NObservations;
 % Tx = zeros(N);Ty = zeros(N);
-xx = linspace(-pi/2,pi/2,NObservations);yy = linspace(-pi/2,pi/2,NObservations);
+xx = linspace(pi/2,-pi/2,NObservations);yy = linspace(pi/2,-pi/2,NObservations);
 % Define target of end effector
 r = 0.14*0.5*10; % 10; 
 Txi = r*cos(xx);
@@ -254,7 +254,7 @@ saveas(gcf,'UntrainedError_dis.png')
 
 %%%%%% Untrained Tracking plot
 % subplot(2,1,1)
-plot(out.ContinuousPositions.Data(:,1),out.ContinuousPositions.Data(:,2),'s', MarkerSize=15)
+plot(out.ContinuousPositions.Data(:,1),out.ContinuousPositions.Data(:,2),'s',LineWidth = 2, MarkerSize=12)
 hold on
 % plot(out.Targets.Data(:,1),out.Targets.Data(:,2), 'k--', LineWidth = 1.5, MarkerSize = 12)
 plot(Txi,Tyi, 'k--', LineWidth = 1.5, MarkerSize = 12)
@@ -277,3 +277,15 @@ legend('x-y Response','Target','location','southeast')
 % ylim([-2,Ty+2])
 set(gca, 'LooseInset', get(gca,'TightInset'))
 % saveas(gcf,'UntrainedTracking.pdf')
+
+%%
+
+plot(posy.data,posx.data,'.')
+hold on
+plot(posy.data(1),posx.data(1),'rX')
+
+%% 
+
+plot(posx.data,posy.data,'.')
+hold on
+plot(posx.data(end),posy.data(end),'rX')
