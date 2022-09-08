@@ -16,7 +16,7 @@ from math import pi, sqrt, atan2, cos, sin, acos
 # Defining helper functions wrt. reward shaping
 
 def wallhit(scan):
-    thresh = 2
+    thresh = 0.1
     return min(scan) < thresh
 
 def goalhit(dist):

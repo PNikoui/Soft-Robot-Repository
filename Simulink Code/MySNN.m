@@ -4,15 +4,16 @@ persistent PyModel
 
 if isempty(PyModel)
     py.importlib.import_module('SNN_in_Py');
-    PyModel = py.SNN_in_Py.Network();
+    PyModel = py.SNN_in_Py.Network(2,64,1);
 %     PyModel.Load_model();
 %     PyTarget = PyModel.Mat2Py(Target);
 
 else
 %     PyTarget = PyModel.Mat2Py(Target);
-%     Pyerror = PyModel.Mat2Py(error);
-%     PyThreshold = PyModel.Mat2Py(Threshold);
-%     PyModel.Update(Pyerror,Threshold);
+%     PyModel = py.SNN_in_Py.Network();
+    Pyerror = PyModel.Mat2Py(error);
+    PyThreshold = PyModel.Mat2Py(Threshold);
+    PyModel.Update(Pyerror,PyThreshold);
 end
 
 % OUT = py.SNN_in_Py.Network().Run_model(Target)

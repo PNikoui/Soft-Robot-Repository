@@ -142,7 +142,8 @@ class genetic_algo(object):
                 # print(sum(old_Lidar))
                 old_DIST = old_parameters[:,-6]
                 # print(old_DIST)
-#                 old_ANGLE = old_parameters[:,-4]
+                old_ANGLE = old_parameters[:,-5]
+                old_SIGN = old_parameters[:,-4]
                 
                 
                 #############################
@@ -171,9 +172,11 @@ class genetic_algo(object):
                 # print(sum(new_Lidar))
                 new_DIST = parameters[:,-6]
                 # print(new_DIST)
-#                 new_ANGLE = parameters[:,-4]
+                new_ANGLE = parameters[:,-5]
+                new_SIGN = parameters[:,-4]
                 
-                
+                if new_ANGLE > old_ANGLE:
+                    r += np.abs(new_ANGLE - old_ANGLE)*10
         
             ## ACTION BASED PENALTIES (inner for loop):
                 

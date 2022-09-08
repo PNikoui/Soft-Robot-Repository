@@ -2,20 +2,21 @@ clear all; close all; clc
 clear classes
 %%
 % Initialization of Soft Robot
-Ts = 1;
+Ts = 1e-1;
 M = 0;
-NTimeSteps = 250; 
-NObservations = 50;  %% How many waypoints on the trajectory
+NTimeSteps = 10; 
+NObservations = 10;  %% How many waypoints on the trajectory
 NStepPerTarget = NTimeSteps/NObservations;
 % Tx = zeros(N);Ty = zeros(N);
-xx = linspace(0,2*pi,NObservations);yy = linspace(0,2*pi,NObservations);
+xx = linspace(-pi/2,pi/2,NObservations);yy = linspace(-pi/2,pi/2,NObservations);
 % Define target of end effector
-r = 10; 
+r = 0.14*0.5*10; % 10; 
 Txi = r*cos(xx);
-Tyi = r*sin(yy);
+Tyi = r*sin(xx);
 Tx = 1;
 Ty = 1;
 Tz = 2;
+
 
 t_iterO = 1;
 % Initial end effector positions
@@ -153,7 +154,9 @@ for i = 1:6
 end
 
 %%
-Pos = SIM.ModelOutput.data;
+% Pos = SIM.ModelOutput.data;
+% Pos = SIM.ContinuousPositions.data
+Pos = POS.Data;
 %% 1-D
 plot(Pos(:,1),'-',LineWidth=2)
 hold on
@@ -232,14 +235,45 @@ set(gca, 'LooseInset', get(gca,'TightInset'))
 % saveas(gcf,'UntrainedTracking.pdf')
 
 %% Plotting for report 2 
-
+Error =out.Error
 %%%%%% Untrained Tracking plot
 plot(Error.time,Error.Data, LineWidth = 1.5)
+% hold on
+% plot(Error2.time,Error2.Data, LineWidth = 1.5)
 grid on
 xlabel('Time [s]')
 % xlim([0,length(Error.time)])
-ylabel('Error [mm]')
+ylabel('Error [m]')
 % ylim([-2,Ty+2])
-legend('x Error','y Error','z Error','location','southwest')
-% set(gca, 'LooseInset', get(gca,'TightInset'))
-% saveas(gcf,'UntrainedErrorFormat.pdf')
+legend('x Error','y Error','location','northwest')
+% legend('x Error','y Error','z Error','location','southwest')
+set(gca, 'LooseInset', get(gca,'TightInset'))
+% saveas(gcf,'UntrainedErrorFormat.png')
+saveas(gcf,'UntrainedError_dis.png')
+%% Plotting for report 2
+
+%%%%%% Untrained Tracking plot
+% subplot(2,1,1)
+plot(out.ContinuousPositions.Data(:,1),out.ContinuousPositions.Data(:,2),'s', MarkerSize=15)
+hold on
+% plot(out.Targets.Data(:,1),out.Targets.Data(:,2), 'k--', LineWidth = 1.5, MarkerSize = 12)
+plot(Txi,Tyi, 'k--', LineWidth = 1.5, MarkerSize = 12)
+hold on
+plot(Txi,Tyi, 'rX', LineWidth = 1.5, MarkerSize = 12)
+grid on
+xlabel('x Position [m]')
+% xlim([-2,Tx+2])
+ylabel('y Position [m]')
+% ylim([-2,Ty+2])
+legend('x-y Response','Target','location','southeast')
+% subplot(2,1,2)
+% plot(out.ContinuousPositions.time,out.ContinuousPositions.Data(:,3))
+% hold on 
+% plot(Tz*ones(max(out.ContinuousPositions.time)), 'k--', LineWidth = 1.5)
+% grid on
+% xlabel('Time [s]')
+% % xlim([0,length(out.ContinuousPositions.Data(:,3))])
+% ylabel('z Position [mm]')
+% ylim([-2,Ty+2])
+set(gca, 'LooseInset', get(gca,'TightInset'))
+% saveas(gcf,'UntrainedTracking.pdf')
