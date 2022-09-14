@@ -10,7 +10,7 @@ NStepPerTarget = NTimeSteps/NObservations;
 % Tx = zeros(N);Ty = zeros(N);
 xx = linspace(pi/2,-pi/2,NObservations);yy = linspace(pi/2,-pi/2,NObservations);
 % Define target of end effector
-r = 0.14*0.5*10; % 10; 
+r = 0.14*0.5; % 10; 
 Txi = r*cos(xx);
 Tyi = r*sin(xx);
 Tx = 1;
@@ -129,31 +129,6 @@ SIM = sim('SR_SNN_Extrinsic_code.slx');
 %     DATA = [DATA;Di];
 % end
 %%
-% Generic set up 
-% clear, close, clc
-
-% Simulation of the model implemented in Simulink
-open('SR_SNN_Extrinsic_code.slx')
-Ts = 1e-3;
-for i = 1:6
-    % Specific step value
-    STEP = 20*i;
-        
-    % Simulate the system
-    sim('SR_SNN_Extrinsic_code.slx')
-           
-    % Plot the results
-    figure(1)
-    title("Step responses")
-    plot(tout, theta*180/pi, 'b')
-    hold on, grid on
-    plot(tout, theta_d*180/pi, 'r')
-    xlabel('time $t$', 'Interpreter','latex','FontSize',12)
-    ylabel('Rotation angle [deg]', 'Interpreter','latex','FontSize',12)
-    sprintf('The error at %d is %d.',20*i, (theta(end) - theta_d(end))*180/pi)
-end
-
-%%
 % Pos = SIM.ModelOutput.data;
 % Pos = SIM.ContinuousPositions.data
 Pos = POS.Data;
@@ -235,6 +210,7 @@ set(gca, 'LooseInset', get(gca,'TightInset'))
 % saveas(gcf,'UntrainedTracking.pdf')
 
 %% Plotting for report 2 
+out = SIM;
 Error =out.Error
 %%%%%% Untrained Tracking plot
 plot(Error.time,Error.Data, LineWidth = 1.5)
@@ -249,7 +225,7 @@ legend('x Error','y Error','location','northwest')
 % legend('x Error','y Error','z Error','location','southwest')
 set(gca, 'LooseInset', get(gca,'TightInset'))
 % saveas(gcf,'UntrainedErrorFormat.png')
-saveas(gcf,'UntrainedError_dis.png')
+% saveas(gcf,'UntrainedError_dis.png')
 %% Plotting for report 2
 
 %%%%%% Untrained Tracking plot

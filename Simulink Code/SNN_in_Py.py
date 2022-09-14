@@ -76,22 +76,32 @@ class Network(nn.Module):
 
             # Initialize pre- and post synaptic updates
 #             Dw_N = 0
-            Dw_N = torch.empty((1,int(self.num_hidden)))
+#             Dw_N = torch.empty((1,int(self.num_hidden)))
+#             Dw_N = torch.empty((int(self.num_hidden),2))
+            Dw_N = torch.empty((int(self.num_hidden)))
 #             Dw_F = 0
-            Dw_F = torch.empty((1,int(self.num_hidden)))
+#             Dw_F = torch.empty((1,int(self.num_hidden)))
+#             Dw_F = torch.empty((int(self.num_hidden),2))
+            Dw_F = torch.empty((int(self.num_hidden)))
              
             for tj_f in self.PreSynapticSpikeTimes:  ## Evaluate difference in spikes SNN.num_steps times
     
                 Dw_F += Dw_N
+#                 print(Dw_N.shape)
+#                 print(self.model.fc1.weight[:,0].shape)
 #                 self.model = self.model.fc1.weight[tj_f] + Dw_N  ## Update PreSynaptic weights
-                self.model.fc1.weight + Dw_N
-                Dw_N = torch.empty((1,int(self.num_hidden)))  #0 # reset summation
+#                 self.model.fc1.weight + Dw_N
+                self.model.fc1.weight[:,0] + Dw_N           ### Decide which weights to update 
+#                 Dw_N = torch.empty((1,int(self.num_hidden)))  #0 # reset summation
+#                 Dw_N = torch.empty((int(self.num_hidden),2))
+                Dw_N = torch.empty((int(self.num_hidden)))
     
                 for ti_n in self.PostSynapticSpikeTimes:
                     Dw_ij = self.LearningWindow(ti_n-tj_f)  ## tensor of updates size: 1xnum_hidden
-                    print(Dw_ij.shape)
+#                     print(Dw_ij.shape)
 #                     print(np.shape(Dw_N))
-                    Dw_N[0] += Dw_ij
+#                     Dw_N[0] += Dw_ij
+                    Dw_N += Dw_ij[0]
     
                     
     ### Plot Spike Times Raster Plot in terminal
@@ -126,15 +136,16 @@ class Network(nn.Module):
     def LearningWindow(self,x):
 
         W = torch.empty((1,int(self.num_hidden)))
-        
+#         W = torch.empty((int(self.num_hidden),2))
+#         print(torch.t(x).shape)
 #         if x.any() > 0: # loop through all neuron connections
                     
 #         x_idx_plus = [n for n,i in enumerate(x[0]) if i>0]
 #         x_idx_minus = [n for n,i in enumerate(x[0]) if i<0]
 #         print(x_idx_plus)
 #         print(x_idx_minus)
-        for n,i in enumerate(x[0]):
-            if i>0:
+        for n,i in enumerate(x[0]):   
+            if i>0:     ### STDP DESIGN PARAMETER: Spike time proximity [s]
 #                 print(i)
                 x_idx_plus = n
 #                 print(n)
